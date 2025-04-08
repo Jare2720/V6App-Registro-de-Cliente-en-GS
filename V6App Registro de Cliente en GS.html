@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Clientes - ProqQro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a2d1b1c33c.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="max-w-2xl mx-auto mt-10 bg-white p-6 rounded-2xl shadow-lg">
+    <h1 class="text-2xl font-bold text-blue-700 mb-4 text-center">Registro de actividad de cliente</h1>
+    
+    <form id="clienteForm" class="space-y-4">
+      <!-- Fecha -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Fecha</label>
+        <input type="date" name="fecha" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+      </div>
+
+      <!-- Nombre -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nombre</label>
+          <input type="text" name="nombre" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <!-- Apellido -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Apellido</label>
+          <input type="text" name="apellido" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+        <input type="tel" name="telefono" pattern="[0-9]{10}" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="10 dígitos sin espacios" />
+      </div>
+
+      <!-- Correo -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+        <input type="email" name="correo" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+      </div>
+
+      <!-- Clave -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Clave</label>
+        <input type="text" name="clave" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+      </div>
+
+      <!-- Propiedad -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Propiedad</label>
+        <select name="propiedad" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option value="">Seleccionar una opción</option>
+          <option>Casa habitación</option>
+          <option>Departamento</option>
+          <option>Oficina</option>
+          <option>Terreno</option>
+        </select>
+      </div>
+
+      <!-- Precio -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Precio</label>
+        <input type="text" name="precio" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="$0.00" />
+      </div>
+
+      <!-- Fuente -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Fuente</label>
+        <select name="fuente" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option value="">Seleccionar una opción</option>
+          <option>Lona</option>
+          <option>Redes Sociales</option>
+          <option>Referido</option>
+          <option>EasyBroker</option>
+          <option>Proppit</option>
+          <option>I24</option>
+          <option>VA</option>
+        </select>
+      </div>
+
+      <!-- Requerimiento -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Requerimiento</label>
+        <textarea name="requerimiento" rows="3" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Especifica el requerimiento del cliente..."></textarea>
+      </div>
+
+      <!-- Botón -->
+      <div class="text-center">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-md">
+          <i class="fas fa-paper-plane mr-2"></i>Enviar registro
+        </button>
+        <p id="formMsg" class="text-sm mt-4"></p>
+      </div>
+    </form>
+  </div>
+
+  <!-- JS -->
+  <script>
+    // Reemplaza esta URL con la URL publicada de tu script de Google Apps
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxzQKPf3M0V8qiTaqQhnGPymwWM3gy1cYQS2PV7m9VX_dNWeiXr74Ldnm1z4iMYzGcGCg/exec";
+    const form = document.getElementById("clienteForm");
+    const msg = document.getElementById("formMsg");
+
+    // Formateo automático de precio
+    const precioInput = form.querySelector("input[name='precio']");
+    precioInput.addEventListener("blur", () => {
+      let val = parseFloat(precioInput.value.replace(/[^0-9.]/g, ''));
+      if (!isNaN(val)) {
+        precioInput.value = val.toLocaleString("es-MX", { style: "currency", currency: "MXN" });
+      }
+    });
+
+    // Envío del formulario
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      fetch(scriptURL, { method: "POST", body: formData })
+        .then(response => {
+          msg.innerText = "✅ Gracias, tu requerimiento cita ha sido registrado.";
+          msg.className = "text-green-600 text-sm mt-2";
+          setTimeout(() => msg.innerText = "", 15000);
+          form.reset();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        })
+        .catch(error => {
+          msg.innerText = "❌ Ocurrió un error al enviar el formulario. Intenta de nuevo.";
+          msg.className = "text-red-600 text-sm mt-2";
+        });
+    });
+  </script>
+</body>
+</html>
